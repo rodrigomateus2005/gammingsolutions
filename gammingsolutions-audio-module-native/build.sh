@@ -1,9 +1,5 @@
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
-javac -h . PipewireAudioBridge.java
-
-javap -s PipewireAudioBridge
-
 gcc -g \
     -fPIC \
     -shared \
@@ -11,6 +7,7 @@ gcc -g \
     -I"$JAVA_HOME/include" \
     -I"$JAVA_HOME/include/linux/" \
     -I"." \
+    -I"./include" \
     -I'/usr/include/pipewire-0.3' \
     -I'/usr/include/spa-0.2' \
     -D_REENTRANT \

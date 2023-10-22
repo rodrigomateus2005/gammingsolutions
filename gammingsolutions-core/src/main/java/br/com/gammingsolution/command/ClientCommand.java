@@ -1,25 +1,23 @@
 package br.com.gammingsolution.command;
 
+import br.com.gammingsolution.controller.ClientController;
 import br.com.gammingsolution.controller.ServerController;
-import br.com.gammingsolution.service.IUsbService;
 import lombok.AllArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 @ShellComponent
-public class ServeCommand {
+public class ClientCommand {
 
-    private final ServerController serverController;
+    private final ClientController clientController;
 
-    @ShellMethod(key = "serve")
+    @ShellMethod(key = "connect")
     public void serve(
             @ShellOption(defaultValue = "spring") String arg
     ) {
-        serverController.start();
+        clientController.connect();
     }
 
 }

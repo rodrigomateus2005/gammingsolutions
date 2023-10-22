@@ -1,6 +1,6 @@
 #include <jni.h>
 #include <pipewire/pipewire_api.c>
-#include <PipewireAudioBridge.h>
+#include <br_com_gammingsolution_audio_PipewireAudioBridge.h>
 
 struct data *con;
 JavaVM *jvm;
@@ -80,7 +80,7 @@ void data_captured(void *b, int size)
   // deattachThreadEnv();
 }
 
-JNIEXPORT void JNICALL Java_PipewireAudioBridge_connect(JNIEnv *env, jobject jthis, jobject listner)
+JNIEXPORT void JNICALL Java_br_com_gammingsolution_audio_PipewireAudioBridge_connect(JNIEnv *env, jobject jthis, jobject listner)
 {
   (*env)->GetJavaVM(env, &jvm);
 
@@ -106,7 +106,7 @@ JNIEXPORT void JNICALL Java_PipewireAudioBridge_connect(JNIEnv *env, jobject jth
   // return outArray;
 }
 
-JNIEXPORT void JNICALL Java_PipewireAudioBridge_stop(JNIEnv *env, jobject jthis)
+JNIEXPORT void JNICALL Java_br_com_gammingsolution_audio_PipewireAudioBridge_stop(JNIEnv *env, jobject jthis)
 {
   stop(con);
 }
