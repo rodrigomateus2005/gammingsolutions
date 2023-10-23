@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.usb4java.LibUsb;
 
+import java.util.List;
+
 @Data
 @Builder
 public class UsbDevice {
@@ -13,5 +15,9 @@ public class UsbDevice {
     private String manufacturer;
     private String product;
     private String serialNumber;
+    private int bus;
+    private int port;
+    private List<Byte> ports;
 
 }
+

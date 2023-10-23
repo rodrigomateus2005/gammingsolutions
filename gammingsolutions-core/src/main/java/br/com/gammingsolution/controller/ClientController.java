@@ -1,29 +1,78 @@
 package br.com.gammingsolution.controller;
 
+import br.com.gammingsolution.model.UsbDevice;
 import br.com.gammingsolution.service.IAudioService;
+import br.com.gammingsolution.service.IUsbService;
+import br.com.gammingsolution.service.UsbIpService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
+@Slf4j
 public class ClientController {
+
+    @Value("${joysticks}")
+    private List<String> joysticks;
 
     @Autowired
     private IAudioService audioService;
 
+    @Autowired
+    private IUsbService usbService;
+
+    @Autowired
+    private UsbIpService usbIpService;
+
     private Thread audioThread;
 
-    public void connect() {
+    public void connect(String host) {
+        log.info("Connecting to " + host);
         try {
-            Socket clientSocket = new Socket("127.0.0.1", 9001);
-            audioThread = connectAudio(clientSocket.getInputStream());
+            usbIpService.registerClientModules();
+            usbIpService.startDaemon();
 
+            Socket clientSocket = new Socket(host, 9001);
+
+            usbService.registerHotPlug((UsbDevice device) -> {
+                try {
+                    if (isDeviceInList(device)) {
+                        String budId = getBusId(device);
+                        usbIpService.bindDevice(budId);
+
+                        var out = new PrintWriter(clientSocket.getOutputStream());
+                        out.println(budId);
+                        out.flush();
+                    }
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
+
+            audioThread = connectAudio(clientSocket.getInputStream());
             audioThread.join();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isDeviceInList(UsbDevice device) {
+        String idInternal = device.getIdVendor() + "-" + device.getIdProduct();
+
+        return joysticks
+                .stream()
+                .anyMatch(x -> StringUtils.equals(x, idInternal));
+    }
+
+    private String getBusId(UsbDevice device) {
+        return device.getBus() + "-" + StringUtils.join(device.getPorts(), ".");
     }
 
     private Thread connectAudio(InputStream in) {

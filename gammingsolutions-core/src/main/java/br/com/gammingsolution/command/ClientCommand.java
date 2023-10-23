@@ -15,9 +15,9 @@ public class ClientCommand {
 
     @ShellMethod(key = "connect")
     public void serve(
-            @ShellOption(defaultValue = "spring") String arg
+            @ShellOption(defaultValue = "127.0.0.1") String host
     ) {
-        clientController.connect();
+        clientController.connect(host);
     }
 
 }

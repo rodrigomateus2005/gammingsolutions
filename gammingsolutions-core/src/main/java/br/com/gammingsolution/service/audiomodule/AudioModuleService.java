@@ -41,7 +41,8 @@ public class AudioModuleService implements IAudioService {
     public void playBytes(byte[] bytes) {
         try {
             speaker.write(bytes, 0, bytes.length);
-            speaker.flush();
+            if (!speaker.isRunning())
+                speaker.start();
         } catch (Exception ex) {
             System.out.println("Error occured during playback process:" + ex.getMessage());
         }
