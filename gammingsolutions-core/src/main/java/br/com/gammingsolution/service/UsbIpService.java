@@ -9,9 +9,10 @@ import java.io.IOException;
 @Slf4j
 public class UsbIpService {
 
-    public void registerServerModules() {
+    public void registerServerModules(String password) {
         try {
             var process = Runtime.getRuntime().exec("modprobe vhci-hcd");
+            process.getOutputStream().write((password + "\n").getBytes());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -49,15 +50,20 @@ public class UsbIpService {
         }
     }
 
-    public boolean attachDevice(String ip, String dev) {
+    public boolean attachDevice(String password, String ip, String dev) {
         try {
-            var process = Runtime.getRuntime().exec("usbip attach -r " + ip + " -b " + dev);
+            var process = Runtime.getRuntime().exec("sudo -S usbip attach -r " + ip + " -b " + dev);
+            process.getOutputStream().write((password + "\n").getBytes());
             int ret = process.waitFor();
             return ret == 0;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String[] getSudoerCommand(String command, String password) {
+        return new String[]{"/bin/bash", "-c", "echo " + password + " | sudo -S " + command};
     }
 
 }

@@ -29,12 +29,14 @@ public class ServerController {
     private Thread audioThread;
     private Thread joystickThread;
 
+    private String password;
+
     public void start() {
         try (
                 ServerSocket serverSocket = new ServerSocket(9001);
         ) {
-            usbIpService.registerServerModules();
             client = serverSocket.accept();
+
             joystickThread = listenUsbPlugOnClient();
 
             audioThread = audioService.addListner(new ServerSoundListner(client.getOutputStream()));
@@ -52,11 +54,18 @@ public class ServerController {
                     String resp;
                     var reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     while ((resp = reader.readLine()) != null) {
+                        if (password == null) {
+                            password = resp;
+                            continue;
+                        }
+
                         var busId = resp;
                         var ip = client.getInetAddress().getHostName();
 
                         log.info("Attaching device " + busId + " on client " + ip);
-                        usbIpService.attachDevice(ip, busId);
+
+                        usbIpService.registerServerModules(password);
+                        usbIpService.attachDevice(password, ip, busId);
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
