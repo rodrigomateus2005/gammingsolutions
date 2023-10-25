@@ -3,10 +3,14 @@ package br.com.gammingsolution.service.audiomodule;
 import br.com.gammingsolution.audio.ISoundListner;
 import br.com.gammingsolution.audio.PipewireAudioBridge;
 import br.com.gammingsolution.service.IAudioService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Queue;
 
 @Service
@@ -40,7 +44,8 @@ public class AudioModuleService implements IAudioService {
     @Override
     public void playBytes(byte[] bytes) {
         try {
-            speaker.write(bytes, 0, bytes.length);
+            if (Collections.max(Arrays.asList(ArrayUtils.toObject(bytes))) > 0)
+                speaker.write(bytes, 0, bytes.length);
             if (!speaker.isRunning())
                 speaker.start();
         } catch (Exception ex) {

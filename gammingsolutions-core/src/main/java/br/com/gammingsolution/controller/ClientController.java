@@ -41,10 +41,6 @@ public class ClientController {
 
             Socket clientSocket = new Socket(host, 9001);
 
-            System.out.println("Digite a senha do usuario do server: ");
-            var reader = new BufferedReader(new InputStreamReader(System.in));
-            clientSocket.getOutputStream().write((reader.readLine() + "\n").getBytes());
-
             usbService.registerHotPlug((UsbDevice device) -> {
                 try {
                     if (isDeviceInList(device)) {

@@ -54,17 +54,11 @@ public class ServerController {
                     String resp;
                     var reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     while ((resp = reader.readLine()) != null) {
-                        if (password == null) {
-                            password = resp;
-                            continue;
-                        }
-
                         var busId = resp;
                         var ip = client.getInetAddress().getHostName();
 
                         log.info("Attaching device " + busId + " on client " + ip);
 
-                        usbIpService.registerServerModules(password);
                         usbIpService.attachDevice(password, ip, busId);
                     }
                 } catch (Exception e) {

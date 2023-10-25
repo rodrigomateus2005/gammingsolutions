@@ -1,23 +1,18 @@
 package br.com.gammingsolution.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Service
 @Slf4j
 public class UsbIpService {
 
-    public void registerServerModules(String password) {
-        try {
-            var process = Runtime.getRuntime().exec("modprobe vhci-hcd");
-            process.getOutputStream().write((password + "\n").getBytes());
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
-    }
+    @Value("${command.attach}")
+    private String commandAttach;
 
     public void registerClientModules() {
         try {
@@ -52,18 +47,13 @@ public class UsbIpService {
 
     public boolean attachDevice(String password, String ip, String dev) {
         try {
-            var process = Runtime.getRuntime().exec("sudo -S usbip attach -r " + ip + " -b " + dev);
-            process.getOutputStream().write((password + "\n").getBytes());
+            var process = Runtime.getRuntime().exec("sudo " + commandAttach + " " + ip + " " + dev);
             int ret = process.waitFor();
             return ret == 0;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    private String[] getSudoerCommand(String command, String password) {
-        return new String[]{"/bin/bash", "-c", "echo " + password + " | sudo -S " + command};
     }
 
 }
