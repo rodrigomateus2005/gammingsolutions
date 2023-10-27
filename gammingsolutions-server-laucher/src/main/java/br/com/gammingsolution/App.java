@@ -20,7 +20,7 @@ public class App {
         threadChangeAndStartX = executeCmdThread("sudo " + pathJar + "/change-vt-game.sh " + argChvt);
 
         Thread.sleep(2000);
-        Thread threadRetroArch = executeCmdThread("/opt/RetroArch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage", new String[]{"XDG_RUNTIME_DIR=/run/user/1000", "HOME=" + homeDir,"DISPLAY=:2"});
+        Thread threadRetroArch = executeCmdThread("/opt/RetroArch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage -fg", new String[]{"XDG_RUNTIME_DIR=/run/user/1000", "HOME=" + homeDir,"DISPLAY=:2"});
         // add -localhost no, to open on network. And --I-KNOW-THIS-IS-INSECURE if -SecurityTypes None
         Thread threadVnc = executeCmdThread("X0tigervnc -display :2 -AcceptSetDesktopSize=0 -localhost=1 -desktop Game -rfbport 5902 -SecurityTypes None");
 
