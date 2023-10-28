@@ -13,14 +13,14 @@ import java.util.concurrent.TimeUnit;
 public class App {
     public static void main(String[] args) throws InterruptedException {
         String pathLocal = args[0];
-        String host = args[1];
+                                                                String host = args[1];
         String user = args[2];
         String password = JOptionPane.showInputDialog("Digite a senha");
 
         Thread threadSSH = startSSHSession(host, user, password, "~/games-scripts/start-game-server.sh", 5902);
         Thread.sleep(5000);
         Thread threadVnc = executeCmdThread("xtigervncviewer -CompressLevel 9 -QualityLevel 1 -AutoSelect 0 localhost:5902");
-        Thread threadConnector = executeCmdThread("sudo " + pathLocal + "/execute-java-client.sh " + host);
+        Thread threadConnector = executeCmdThread("java -jar " + pathLocal + "/client-laucher-1.0-SNAPSHOT-jar-with-dependencies.jar connect " + host, new String[]{"XDG_RUNTIME_DIR=/run/user/1000"});
 
         threadVnc.join();
         threadSSH.interrupt();

@@ -36,7 +36,6 @@ public class ClientController {
     public void connect(String host) {
         log.info("Connecting to " + host);
         try {
-            usbIpService.registerClientModules();
             usbIpService.startDaemon();
 
             Socket clientSocket = new Socket(host, 9001);

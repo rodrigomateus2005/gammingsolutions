@@ -1,0 +1,3 @@
+modprobe vhci-hcd
+
+usbipd

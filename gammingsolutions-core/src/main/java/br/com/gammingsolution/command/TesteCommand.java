@@ -20,7 +20,9 @@ public class TesteCommand {
     public void serve(
             @ShellOption(defaultValue = "127.0.0.1") String host
     ) throws IOException {
-        var content = FileUtils.readFileToByteArray(new File("testeaudio.wav"));
+        java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+
+        var content = FileUtils.readFileToByteArray(new File("/home/rodrigo/Downloads/testeaudio.wav"));
         while (true) {
             audioService.playBytes(content);
         }
