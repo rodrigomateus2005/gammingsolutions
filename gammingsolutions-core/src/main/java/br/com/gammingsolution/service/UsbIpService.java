@@ -14,7 +14,7 @@ public class UsbIpService {
     @Value("${command.attach}")
     private String commandAttach;
 
-    @Value("${command.attach}")
+    @Value("${command.bind}")
     private String commandBind;
 
     @Value("${command.start_daemon}")

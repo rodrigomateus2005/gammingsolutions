@@ -59,7 +59,7 @@ public class ServerController {
 
                         log.info("Attaching device " + busId + " on client " + ip);
 
-                        usbIpService.attachDevice(password, ip, busId);
+                        usbIpService.attachDevice(ip, busId);
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
