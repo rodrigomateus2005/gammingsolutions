@@ -20,7 +20,7 @@ public class App {
         Thread threadSSH = startSSHSession(host, user, password, "~/games-scripts/start-game-server.sh", 5902);
         Thread.sleep(5000);
         Thread threadVnc = executeCmdThread("xtigervncviewer -CompressLevel 9 -QualityLevel 1 -AutoSelect 0 localhost:5902");
-        Thread threadConnector = executeCmdThread("java -jar " + pathLocal + "/peripherals-connector-1.0-SNAPSHOT.jar connect " + host + " > /tmp/game-connector.log 2> /tmp/game-connector.err", new String[]{"XDG_RUNTIME_DIR=/run/user/1000"});
+        Thread threadConnector = executeCmdThread(pathLocal + "/execute-java-client.sh", new String[]{"XDG_RUNTIME_DIR=/run/user/1000"});
 
         threadVnc.join();
         threadSSH.interrupt();
@@ -39,6 +39,9 @@ public class App {
                     session = new JSch().getSession(user, host);
                     session.setPortForwardingL(port, "localhost", port);
                     session.setPassword(password);
+                    session.setConfig("compression.s2c", "zlib@openssh.com,zlib,none");
+                    session.setConfig("compression.c2s", "zlib@openssh.com,zlib,none");
+                    session.setConfig("compression_level", "9");
                     session.setConfig("StrictHostKeyChecking", "no");
                     session.connect();
 
