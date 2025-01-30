@@ -7,8 +7,8 @@ import java.io.*;
 public class VirtualGamepadBridge {
 
     static {
-        // System.loadLibrary("pipewire_bridge"); // pipewire_bridge.dll (Windows) or libpipewire_bridge.so (Unixes)
-        loadJarLibrary("libpipewire_bridge.so");
+        // System.loadLibrary("libvirtualgamepad_bridge"); // libvirtualgamepad_bridge.dll (Windows) or libvirtualgamepad_bridge.so (Unixes)
+        loadJarLibrary("libvirtualgamepad_bridge.so");
     }
 
     private static void loadJarLibrary(String name) {

@@ -48,7 +48,7 @@ int main() {
 
         printf("Sending events\n");
         // send_event(uinput, EV_KEY, BTN_SOUTH, 1)
-        send_event(uinput, 0x01, 0x130, 1)
+        send_event(uinput, 0x01, 0x130, 1);
     // }
 
     destroy_gamepad_test();
