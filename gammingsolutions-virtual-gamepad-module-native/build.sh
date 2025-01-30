@@ -8,6 +8,7 @@ gcc -g \
     -I"$JAVA_HOME/include/linux/" \
     -I"." \
     -I"./include" \
+    -I"./device" \
     -I'/usr/include/libevdev-1.0' \
     -D_REENTRANT \
     -levdev

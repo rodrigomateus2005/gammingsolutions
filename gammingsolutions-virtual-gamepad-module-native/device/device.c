@@ -5,7 +5,7 @@
 
 bool check(int code) {
     if (code < 0) {
-        fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-code));
+        // fprintf(stderr, "Failed to init libevdev (%s)\n", strerror(-code));
         return false;
     }
 
@@ -18,17 +18,6 @@ struct libevdev_uinput *create_uinput(struct libevdev *evdev)
     if (!check(libevdev_uinput_create_from_device(evdev, LIBEVDEV_UINPUT_OPEN_MANAGED, &uinput))) return NULL;
 
     return uinput;
-}
-
-struct libevdev *create_dev()
-{
-    struct libevdev *evdev = libevdev_new();
-
-    init_dev(evdev);
-    if (!init_abs_events(evdev)) return NULL;
-    if (!init_key_events(evdev)) return NULL;
-
-    return evdev;
 }
 
 void init_dev(struct libevdev *evdev)
@@ -79,6 +68,17 @@ bool init_key_events(struct libevdev *evdev)
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_MODE, NULL))) return false;
 
     return true;
+}
+
+struct libevdev *create_dev()
+{
+    struct libevdev *evdev = libevdev_new();
+
+    init_dev(evdev);
+    if (!init_abs_events(evdev)) return NULL;
+    if (!init_key_events(evdev)) return NULL;
+
+    return evdev;
 }
 
 void send_event(struct libevdev_uinput *uinput, unsigned int type, unsigned int code, int value) {

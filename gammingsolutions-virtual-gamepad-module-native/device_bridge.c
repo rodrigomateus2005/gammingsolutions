@@ -12,5 +12,5 @@ JNIEXPORT jobject JNICALL Java_br_com_gammingsolution_virtualgamepad_VirtualGame
     jmethodID constructor = (*env)->GetMethodID(env, cls, "<init>", "(JJ)V");
     jobject object = (*env)->NewObject(env, cls, constructor, evdev, uinput);
 
-    return object
+    return object;
 }
