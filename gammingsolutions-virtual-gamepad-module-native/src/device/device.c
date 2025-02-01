@@ -67,6 +67,11 @@ bool init_key_events(struct libevdev *evdev)
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_THUMBR, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_MODE, NULL))) return false;
 
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_UP, NULL))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_DOWN, NULL))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_LEFT, NULL))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_RIGHT, NULL))) return false;
+
     return true;
 }
 

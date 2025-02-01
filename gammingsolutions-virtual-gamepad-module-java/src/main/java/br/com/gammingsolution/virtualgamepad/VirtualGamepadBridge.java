@@ -33,8 +33,15 @@ public class VirtualGamepadBridge {
         }
     }
 
-    private native GamepadNative createVirtualGamepad();
-    private native void destroyVirtualGamepad(GamepadNative gamepad);
-    private native void sendEvent(GamepadNative gamepad, long button);
+    public native GamepadNative createVirtualGamepad();
+    public void destroyVirtualGamepad(GamepadNative gamepad) {
+        destroyVirtualGamepad(gamepad.getEvdev(), gamepad.getUinput());
+    }
+    public void sendEvent(GamepadNative gamepad, int type, int button, int value) {
+        sendEvent(gamepad.getUinput(), type, button, value);
+    }
+
+    private native void destroyVirtualGamepad(long evdev, long uinput);
+    private native void sendEvent(long uinput, int type, int button, int value);
 
 }

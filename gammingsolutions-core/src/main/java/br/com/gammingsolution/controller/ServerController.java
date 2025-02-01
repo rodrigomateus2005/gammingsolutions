@@ -2,6 +2,7 @@ package br.com.gammingsolution.controller;
 
 import br.com.gammingsolution.audio.ISoundListner;
 import br.com.gammingsolution.service.IAudioService;
+import br.com.gammingsolution.service.IJoystickService;
 import br.com.gammingsolution.service.UsbIpService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,10 @@ public class ServerController {
     private IAudioService audioService;
 
     @Autowired
-    private UsbIpService usbIpService;
+    private IJoystickService joystickService;
 
-    private Socket client;
+    private Socket clientAudio;
+    private Socket clientJoystick;
     private Thread audioThread;
     private Thread joystickThread;
 
@@ -35,11 +37,13 @@ public class ServerController {
         try (
                 ServerSocket serverSocket = new ServerSocket(9001);
         ) {
-            client = serverSocket.accept();
+            clientAudio = serverSocket.accept();
+            clientJoystick = serverSocket.accept();
 
             joystickThread = listenUsbPlugOnClient();
+            joystickThread.join();
 
-            audioThread = audioService.addListner(new ServerSoundListner(client.getOutputStream()));
+            audioThread = audioService.addListner(new ServerSoundListner(clientAudio.getOutputStream()));
             audioThread.join();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -50,19 +54,24 @@ public class ServerController {
         var t = new Thread() {
             @Override
             public void run() {
+                var joypad = 0L;
                 try {
-                    String resp;
-                    var reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    while ((resp = reader.readLine()) != null) {
-                        var busId = resp;
-                        var ip = client.getInetAddress().getHostName();
+                    joypad = joystickService.createNewJoystick();
+                    log.info("Created joypad {}", joypad);
 
-                        log.info("Attaching device " + busId + " on client " + ip);
+                    var out = clientJoystick.getOutputStream();
 
-                        usbIpService.attachDevice(ip, busId);
+                    out.write(String.valueOf(joypad).getBytes());
+
+                    String command;
+                    var reader = new BufferedReader(new InputStreamReader(clientJoystick.getInputStream()));
+                    while ((command = reader.readLine()) != null) {
+                        // usbIpService.attachDevice(ip, busId);
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
+                } finally {
+                    joystickService.disconectJoystick(joypad);
                 }
             }
         };

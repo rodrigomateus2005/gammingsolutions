@@ -18,18 +18,18 @@ JNIEXPORT jobject JNICALL Java_br_com_gammingsolution_virtualgamepad_VirtualGame
 /*
  * Class:     br_com_gammingsolution_virtualgamepad_VirtualGamepadBridge
  * Method:    destroyVirtualGamepad
- * Signature: (Lbr/com/gammingsolution/virtualgamepad/model/GamepadNative;)V
+ * Signature: (JJ)V
  */
 JNIEXPORT void JNICALL Java_br_com_gammingsolution_virtualgamepad_VirtualGamepadBridge_destroyVirtualGamepad
-  (JNIEnv *, jobject, jobject);
+  (JNIEnv *, jobject, jlong, jlong);
 
 /*
  * Class:     br_com_gammingsolution_virtualgamepad_VirtualGamepadBridge
  * Method:    sendEvent
- * Signature: (Lbr/com/gammingsolution/virtualgamepad/model/GamepadNative;J)V
+ * Signature: (JIII)V
  */
 JNIEXPORT void JNICALL Java_br_com_gammingsolution_virtualgamepad_VirtualGamepadBridge_sendEvent
-  (JNIEnv *, jobject, jobject, jlong);
+  (JNIEnv *, jobject, jlong, jint, jint, jint);
 
 #ifdef __cplusplus
 }
