@@ -2,11 +2,10 @@ package br.com.gammingsolution.controller;
 
 import br.com.gammingsolution.audio.ISoundListner;
 import br.com.gammingsolution.service.IAudioService;
-import br.com.gammingsolution.service.IJoystickService;
-import br.com.gammingsolution.service.UsbIpService;
-import lombok.AllArgsConstructor;
+import br.com.gammingsolution.service.VNCService;
+import br.com.gammingsolution.service.VirtualJoystickService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.BufferedReader;
@@ -18,35 +17,46 @@ import java.net.Socket;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class ServerController {
 
-    @Autowired
-    private IAudioService audioService;
+    private final IAudioService audioService;
 
-    @Autowired
-    private IJoystickService joystickService;
+    private final VirtualJoystickService joystickService;
+
+    private final VNCService vncService;
+
+    private Socket clientJoystick;
 
     private Socket clientAudio;
-    private Socket clientJoystick;
-    private Thread audioThread;
-    private Thread joystickThread;
-
-    private String password;
 
     public void start() {
+        Thread joystickThread = null;
+        Thread audioThread = null;
+
         try (
-                ServerSocket serverSocket = new ServerSocket(9001);
+                ServerSocket serverSocket = new ServerSocket(9001)
         ) {
             clientAudio = serverSocket.accept();
             clientJoystick = serverSocket.accept();
 
             joystickThread = listenUsbPlugOnClient();
-            joystickThread.join();
-
             audioThread = audioService.addListner(new ServerSoundListner(clientAudio.getOutputStream()));
-            audioThread.join();
+
+            vncService.startVnc();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            if (joystickThread != null) {
+                if (joystickThread.isAlive()) {
+                    joystickThread.interrupt();
+                }
+            }
+            if (audioThread != null) {
+                if (audioThread.isAlive()) {
+                    audioThread.interrupt();
+                }
+            }
         }
     }
 
