@@ -179,7 +179,7 @@ static struct data* create_pipewire_connection(void (*clb_ptr)(void *, int))
      * rate and channels. */
     params[0] = spa_format_audio_raw_build(&b, SPA_PARAM_EnumFormat,
                                            &SPA_AUDIO_INFO_RAW_INIT(
-                                                   .format = SPA_AUDIO_FORMAT_S16));
+                                                   .format = SPA_AUDIO_FORMAT_F32));
 
     // params[0] = spa_pod_builder_add_object(&b,
 	// 			SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat,

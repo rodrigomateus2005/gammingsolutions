@@ -1,9 +1,11 @@
 package br.com.gammingsolution.controller;
 
 import br.com.gammingsolution.audio.ISoundListner;
+import br.com.gammingsolution.model.JoypadCommand;
 import br.com.gammingsolution.service.IAudioService;
 import br.com.gammingsolution.service.VNCService;
 import br.com.gammingsolution.service.VirtualJoystickService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ import java.net.Socket;
 @Slf4j
 @RequiredArgsConstructor
 public class ServerController {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final IAudioService audioService;
 
@@ -76,7 +80,10 @@ public class ServerController {
                     String command;
                     var reader = new BufferedReader(new InputStreamReader(clientJoystick.getInputStream()));
                     while ((command = reader.readLine()) != null) {
-                        // usbIpService.attachDevice(ip, busId);
+                        log.info("received joypad event: {}", command);
+
+                        JoypadCommand joypadCommand = objectMapper.readValue(command, JoypadCommand.class);
+                        joystickService.sendEvent(0, joypadCommand.getType(), joypadCommand.getKey(), joypadCommand.getValue());
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);

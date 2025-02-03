@@ -34,7 +34,8 @@ bool init_abs_events(struct libevdev *evdev)
     struct input_absinfo absinfo = {
         .value = 0,
         .minimum = 0,
-        .maximum = 12372,
+        //.maximum = 12372,
+        .maximum = 32767,
         .fuzz = 0,
         .flat = 0,
         .resolution = 40};
@@ -42,8 +43,10 @@ bool init_abs_events(struct libevdev *evdev)
     if (!check(libevdev_enable_event_type(evdev, EV_ABS))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_X, &absinfo))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_Y, &absinfo))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_Z, &absinfo))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_RX, &absinfo))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_RY, &absinfo))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_RZ, &absinfo))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_BRAKE, &absinfo))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_THROTTLE, &absinfo))) return false;
 
@@ -53,10 +56,10 @@ bool init_abs_events(struct libevdev *evdev)
 bool init_key_events(struct libevdev *evdev)
 {
     if (!check(libevdev_enable_event_type(evdev, EV_KEY))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_SOUTH, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_EAST, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_WEST, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_NORTH, NULL))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_A, NULL))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_B, NULL))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_Y, NULL))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_X, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_TL, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_TR, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_TL2, NULL))) return false;
@@ -67,10 +70,10 @@ bool init_key_events(struct libevdev *evdev)
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_THUMBR, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_MODE, NULL))) return false;
 
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_UP, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_DOWN, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_LEFT, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_RIGHT, NULL))) return false;
+    // if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_UP, NULL))) return false;
+    // if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_DOWN, NULL))) return false;
+    // if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_LEFT, NULL))) return false;
+    // if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_DPAD_RIGHT, NULL))) return false;
 
     return true;
 }
