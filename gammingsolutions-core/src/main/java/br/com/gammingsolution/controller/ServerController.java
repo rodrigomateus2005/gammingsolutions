@@ -35,63 +35,68 @@ public class ServerController {
     private Socket clientAudio;
 
     public void start() {
-        Thread joystickThread = null;
-        Thread audioThread = null;
+        try {
+            var t = new Thread(() -> {
+                Thread joystickThread = null;
+                Thread audioThread = null;
 
-        try (
-                ServerSocket serverSocket = new ServerSocket(9001)
-        ) {
-            clientAudio = serverSocket.accept();
-            clientJoystick = serverSocket.accept();
+                try(
+                        ServerSocket serverSocket = new ServerSocket(9001)
+                ) {
+                    clientAudio = serverSocket.accept();
+                    clientJoystick = serverSocket.accept();
 
-            joystickThread = listenUsbPlugOnClient();
-            audioThread = audioService.addListner(new ServerSoundListner(clientAudio.getOutputStream()));
+                    joystickThread = listenUsbPlugOnClient();
+                    audioThread = audioService.addListner(new ServerSoundListner(clientAudio.getOutputStream()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    if (joystickThread != null) {
+                        if (joystickThread.isAlive()) {
+                            joystickThread.interrupt();
+                        }
+                    }
+                    if (audioThread != null) {
+                        if (audioThread.isAlive()) {
+                            audioThread.interrupt();
+                        }
+                    }
+                }
+            });
+            t.start();
 
+            log.info("Starting vnc server");
             vncService.startVnc();
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            if (joystickThread != null) {
-                if (joystickThread.isAlive()) {
-                    joystickThread.interrupt();
-                }
-            }
-            if (audioThread != null) {
-                if (audioThread.isAlive()) {
-                    audioThread.interrupt();
-                }
-            }
         }
     }
 
     private Thread listenUsbPlugOnClient() {
-        var t = new Thread() {
-            @Override
-            public void run() {
-                var joypad = 0L;
-                try {
-                    joypad = joystickService.createNewJoystick();
-                    log.info("Created joypad {}", joypad);
+        var t = new Thread(() -> {
+            var joypad = 0L;
+            try {
+                joypad = joystickService.createNewJoystick();
+                log.info("Created joypad {}", joypad);
 
-                    var out = clientJoystick.getOutputStream();
+                var out = clientJoystick.getOutputStream();
 
-                    out.write(String.valueOf(joypad).getBytes());
+                out.write(String.valueOf(joypad).getBytes());
 
-                    String command;
-                    var reader = new BufferedReader(new InputStreamReader(clientJoystick.getInputStream()));
-                    while ((command = reader.readLine()) != null) {
-                        log.info("received joypad event: {}", command);
+                String command;
+                var reader = new BufferedReader(new InputStreamReader(clientJoystick.getInputStream()));
+                while ((command = reader.readLine()) != null) {
+                    log.info("received joypad event: {}", command);
 
-                        JoypadCommand joypadCommand = objectMapper.readValue(command, JoypadCommand.class);
-                        joystickService.sendEvent(0, joypadCommand.getType(), joypadCommand.getKey(), joypadCommand.getValue());
-                    }
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                } finally {
-                    joystickService.disconectJoystick(joypad);
+                    JoypadCommand joypadCommand = objectMapper.readValue(command, JoypadCommand.class);
+                    joystickService.sendEvent(0, joypadCommand.getType(), joypadCommand.getKey(), joypadCommand.getValue());
                 }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            } finally {
+                joystickService.disconectJoystick(joypad);
             }
-        };
+        });
         t.start();
         return t;
     }
