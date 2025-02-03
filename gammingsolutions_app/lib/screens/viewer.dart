@@ -102,16 +102,16 @@ class _ViewerPagePageState extends State<ViewerPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           RemoteFrameBufferWidget(
-            hostName: widget.hostName,
             port: 5902,
+            hostName: widget.hostName,
+            password: widget.password,
             onError: (final Object error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
                   content: Text('Error: $error'),
                 ),
               );
             },
-            password: widget.password,
           ),
         ],
       ),
