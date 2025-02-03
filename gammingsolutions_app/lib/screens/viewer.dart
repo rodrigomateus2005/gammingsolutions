@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -33,8 +34,8 @@ class _ViewerPagePageState extends State<ViewerPage> {
   @override
   void initState() {
     Gamepads.eventsByGamepad(widget.gamepadId).listen((event) {
-      socketJoypad.writeln(
-          {'key': event.key, 'value': event.value, 'type': event.type.index});
+      socketJoypad.writeln(jsonEncode(
+          {'key': event.key, 'value': event.value, 'type': event.type.index}));
       log(event.key);
       log(event.value.toString());
       log(event.type.name);
