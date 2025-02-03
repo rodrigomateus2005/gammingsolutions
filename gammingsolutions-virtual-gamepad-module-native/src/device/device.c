@@ -33,7 +33,7 @@ bool init_abs_events(struct libevdev *evdev)
 {
     struct input_absinfo absinfo = {
         .value = 0,
-        .minimum = 0,
+        .minimum = -32767,
         //.maximum = 12372,
         .maximum = 32767,
         .fuzz = 0,

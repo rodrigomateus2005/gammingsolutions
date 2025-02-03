@@ -15,6 +15,7 @@ public class GamepadNative {
     private long uinput = 0;
 
     public GamepadNative(long evdev, long uinput) {
-
+        this.evdev = evdev;
+        this.uinput = uinput;
     }
 }
