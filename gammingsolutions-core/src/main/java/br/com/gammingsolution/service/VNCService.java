@@ -7,7 +7,7 @@ public class VNCService {
 
     public void startVnc() {
         try {
-            var process = Runtime.getRuntime().exec("x0vncserver -fg -localhost no -AcceptSetDesktopSize 0 -display :1");
+            var process = Runtime.getRuntime().exec("x0vncserver -fg -localhost no -AcceptSetDesktopSize 0 -display :2");
 
             process.waitFor();
         } catch (Exception e) {

@@ -103,10 +103,10 @@ class _ViewerPagePageState extends State<ViewerPage> {
         children: <Widget>[
           RemoteFrameBufferWidget(
             hostName: widget.hostName,
-            port: 5901,
+            port: 5902,
             onError: (final Object error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
                   content: Text('Error: $error'),
                 ),
               );

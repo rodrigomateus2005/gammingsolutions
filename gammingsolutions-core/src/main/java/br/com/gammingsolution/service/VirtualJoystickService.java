@@ -19,13 +19,13 @@ public class VirtualJoystickService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final VirtualGamepadBridge bridge;
     private final List<GamepadNative> gamepads;
-    private final Map<Integer, Map<Integer, Integer>> map;
+    private final Map<String, Map<String, Integer>> map;
 
     public VirtualJoystickService() {
         bridge = new VirtualGamepadBridge();
         gamepads = new ArrayList<>();
 
-        Map<Integer, Map<Integer, Integer>> map;
+        Map<String, Map<String, Integer>> map;
         try {
             InputStream in = VirtualJoystickService.class.getClassLoader().getResourceAsStream("joystick_map.json");
 
@@ -45,7 +45,7 @@ public class VirtualJoystickService {
     public void sendEvent(long joystick, int type, int keyCode, double value) {
         Double nativeValue = value * 12372;
         int nativeType = type == 0 ? EV_KEY : EV_ABS;
-        int nativeKeyCode = map.get(type).get(keyCode);
+        int nativeKeyCode = map.get(String.valueOf(type)).get(String.valueOf(keyCode));
 
         bridge.sendEvent(gamepads.get((int) joystick), nativeType, nativeKeyCode, nativeValue.intValue());
     }
