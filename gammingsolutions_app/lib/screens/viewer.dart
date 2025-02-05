@@ -99,7 +99,7 @@ class _ViewerPagePageState extends State<ViewerPage> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           RemoteFrameBufferWidget(
             port: 5902,

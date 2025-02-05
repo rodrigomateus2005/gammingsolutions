@@ -62,8 +62,6 @@ bool init_key_events(struct libevdev *evdev)
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_X, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_TL, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_TR, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_TL2, NULL))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_TR2, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_SELECT, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_START, NULL))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_KEY, BTN_THUMBL, NULL))) return false;
