@@ -47,8 +47,8 @@ bool init_abs_events(struct libevdev *evdev)
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_RX, &absinfo))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_RY, &absinfo))) return false;
     if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_RZ, &absinfo))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_BRAKE, &absinfo))) return false;
-    if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_THROTTLE, &absinfo))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_HAT0X, &absinfo))) return false;
+    if (!check(libevdev_enable_event_code(evdev, EV_ABS, ABS_HAT0Y, &absinfo))) return false;
 
     return true;
 }
