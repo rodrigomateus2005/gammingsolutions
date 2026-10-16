@@ -34,8 +34,12 @@ class _ViewerPagePageState extends State<ViewerPage> {
   @override
   void initState() {
     Gamepads.eventsByGamepad(widget.gamepadId).listen((event) {
+      var value = event.value;
+      if (event.type == KeyType.analog && ["6", "7"].contains(event.key)) {
+        value = value * -1;
+      }
       socketJoypad.writeln(jsonEncode(
-          {'key': event.key, 'value': event.value, 'type': event.type.index}));
+          {'key': event.key, 'value': value, 'type': event.type.index}));
       log(event.key);
       log(event.value.toString());
       log(event.type.name);
@@ -46,16 +50,16 @@ class _ViewerPagePageState extends State<ViewerPage> {
       audioDataHandler(ChunkedStreamReader(socketAudio));
     }).catchError((e) {
       log("Unable to connect: $e");
-    });
-
-    Socket.connect(widget.hostName, 9001).then((Socket sock) {
-      socketJoypad = sock;
-      socketJoypad.listen(joypadDataHandler,
-          onError: joypadErrorHandler,
-          onDone: joypadDoneHandler,
-          cancelOnError: false);
-    }).catchError((e) {
-      log("Unable to connect: $e");
+    }).then((d) {
+      Socket.connect(widget.hostName, 9001).then((Socket sock) {
+        socketJoypad = sock;
+        socketJoypad.listen(joypadDataHandler,
+            onError: joypadErrorHandler,
+            onDone: joypadDoneHandler,
+            cancelOnError: false);
+      }).catchError((e) {
+        log("Unable to connect: $e");
+      });
     });
 
     startAudioPlayer();

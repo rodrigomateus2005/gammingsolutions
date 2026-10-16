@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gammingsolutions_app/screens/viewer.dart';
 import 'package:gammingsolutions_app/widgets/list_gamepads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -17,6 +18,11 @@ class _MyHomePageState extends State<MyHomePage> {
   String gamepadIdSelected = '';
   final hostController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _startViewer() {
     _formKey.currentState?.save();
