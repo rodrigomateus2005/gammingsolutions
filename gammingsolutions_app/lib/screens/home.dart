@@ -15,17 +15,40 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String gamepadIdSelected = '';
   final hostController = TextEditingController();
   final passwordController = TextEditingController();
+  final gamePadController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
+    SharedPreferences.getInstance().then((prefs) {
+      final host = prefs.getString("host");
+      if (host != null) {
+        hostController.text = host;
+      }
+
+      final pass = prefs.getString("password");
+      if (pass != null) {
+        passwordController.text = pass;
+      }
+
+      final gamePadId = prefs.getString("game_pad_id");
+      if (gamePadId != null) {
+        gamePadController.text = gamePadId;
+      }
+    });
   }
 
   void _startViewer() {
     _formKey.currentState?.save();
+
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("host", hostController.text);
+      prefs.setString("password", passwordController.text);
+      prefs.setString("game_pad_id", gamePadController.text);
+    });
 
     Navigator.push(
       context,
@@ -33,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => ViewerPage(
                 hostName: hostController.text,
                 password: passwordController.text,
-                gamepadId: gamepadIdSelected,
+                gamepadId: gamePadController.text,
               )),
     );
   }
@@ -81,13 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       enableSuggestions: false,
                       obscureText: true,
                     ),
-                    ListGamepads(
-                      onSelected: (value) {
-                        setState(() {
-                          gamepadIdSelected = value;
-                        });
-                      },
-                    ),
+                    ListGamepads(controller: gamePadController),
                   ],
                 ),
               ))),
